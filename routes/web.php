@@ -15,9 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/image', 'DemoController@image_form');
-Route::post('/image', 'DemoController@image_save');
-Route::get('/image/{filename}', 'DemoController@image_show');
+Route::get('/image', 'ImageController@form');
+Route::post('/image', 'ImageController@save');
+Route::get('/image', 'ImageController@display_image_page');
+Route::get('/image_data', 'ImageController@show');
 Route::get('/demo', function() {
   return view('demo');
 });
+
+/* API ROUTES WILL DEFINE HERE */
+Route::get('/signup', function() {dd("cool"); });
