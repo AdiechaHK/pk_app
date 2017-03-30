@@ -19,6 +19,10 @@ Route::get('/image', 'ImageController@form');
 Route::post('/image', 'ImageController@save');
 Route::get('/image', 'ImageController@display_image_page');
 Route::get('/image_data', 'ImageController@show');
+
+Route::post('/profile_image', 'ImageController@save_profile_image');
+Route::post('/contact_image', 'ImageController@save_contact_image');
+
 Route::get('/demo', function() {
   return view('demo');
 });

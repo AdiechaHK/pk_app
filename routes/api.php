@@ -20,4 +20,4 @@ Route::get('/user', function (Request $request) {
 Route::post('/signup', 'Api\\UserController@create');
 Route::post('/login', 'Api\\UserController@login');
 
-
+Route::resource('/contact', 'Api\\ContactController');

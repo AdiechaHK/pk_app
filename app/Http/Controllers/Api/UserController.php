@@ -18,6 +18,7 @@ class UserController extends Controller
     $user->company_name = $request->company_name;
     $user->email = $request->email;
     $user->mobile_number = $request->mobile_number;
+    $user->type = $request->type == "MAKER"? "MAKER": "CONSUMER";
     $user->password = Hash::make($request->password);
     $user->name = $request->fullname;
     $user->hash = str_random(32);
