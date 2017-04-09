@@ -53,4 +53,39 @@ class UserController extends Controller
 
   }
 
+  public function getAllPortfolyo() {
+      $user = DB::table('users')
+              ->join('images', 'users.image', '=', 'images.id')
+              ->select('images.name as img_name', 'images.path as img_path', 'users.name', 'users.image', 'users.user_id')
+              ->get();
+      if (count($user) > 0) {
+          $udata = array(
+              'user_id' => $user->user_id,
+              'image' => $user->img_path,
+          );
+          return response()->json(['castkingResponse' => [$udata]]);
+      } else {
+          return response()->json(['castkingResponse' => [['success' => false]]]);
+      }
+  }
+
+  public function getImgPortfolyo(Request $request) {
+      $users = DB::table('users')
+              ->where('users.id', $request->id)
+              ->join('images', 'users.image', '=', 'images.id')
+              ->select('images.name as img_name', 'images.path as img_path', 'users.name', 'users.image', 'users.user_id')
+              ->get();
+      if (count($users) > 0) {
+          foreach ($users as $user) {
+              $udata[] = array(
+                  'user_id' => $user->user_id,
+                  'image' => $user->img_path,
+              );
+          }
+          return response()->json(['castkingResponse' => [$udata]]);
+      } else {
+          return response()->json(['castkingResponse' => [['success' => false]]]);
+      }
+  }
+
 }
