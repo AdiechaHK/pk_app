@@ -9,8 +9,6 @@ use App\OrderDetail;
 use App\Image;
 use Hash;
 use Illuminate\Support\Facades\Input;
-//use Illuminate\Support\Facades\Response;
-//use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -108,10 +106,8 @@ class OrderController extends Controller {
         if ($order) {
             $order->status = $request->status;
             $order->save();
-            //return response()->json(['castkingResponse' => [["success" => true]]]);
             return $this->_res(true, ['message' => 'Order status has been updated successfully.']);
         } else {
-            //return response()->json(['castkingResponse' => [["success" => 'Order not found.']]]);
             return $this->_res(false, ['message' => 'Order not found.']);
         }
     }
