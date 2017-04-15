@@ -38,41 +38,29 @@ class OrderController extends Controller {
             return $this->_res(true, ["message" => "Order has been created successfully."]);
         } else {
             $response = $validator->messages();
-            return $this->_res(false, [$response->all()]);
+            return $this->_res(false, $response->all());
         }
     }
 
     public function getAllOrder(Request $request) {
         $ordersData = array();
-
         $orders = Order::where('user_id', $request->user_id)
                 ->with('avatar')
                 ->with('orderdetail')
                 ->get();
-        /* $orders = DB::table('order')
-          ->join('users', 'users.id', '=', 'order.id')
-          ->join('images', 'users.image', '=', 'images.id')
-          ->select('images.type as img_type', 'images.name as img_name', 'images.path as img_path', 'users.name', 'users.image', 'users.type', 'order.id as order_id', 'order.description', 'order.user_id as user_id', 'order.status as ord_status')
-          ->get(); */
         if (count($orders) > 0) {
             foreach ($orders as $order) {
-                echo "<pre>";
-                print_r($order->avatar[0]);
-                echo "</pre>";
                 $ordersData[] = array(
                     'id' => (string) $order->id,
                     'user_id' => (string) $order->user_id,
                     'makername' => $order->orderdetail->name,
-                    'image' => $order->avatar->path,
+                    //'image' => $order->avatar->path,
                     'description' => $order->description,
                     'status' => $order->status
                 );
             }
-            exit;
-            //return response()->json(['castkingResponse' => $ordersData]);
-            return $this->_res(true, [$ordersData]);
+            return $this->_res(true, $ordersData);
         } else {
-            //return response()->json(['castkingResponse' => [['success' => false]]]);
             return $this->_res(false);
         }
     }
@@ -80,28 +68,26 @@ class OrderController extends Controller {
     public function getOrder(Request $request) {
         $validator = Validator::make(Input::all(), Order::$rules_order_maker);
         if ($validator->passes()) {
-            $order = DB::table('order')
-                    ->where('order.id', $request->id)
-                    ->join('users', 'users.id', '=', 'order.id')
-                    ->join('images', 'users.image', '=', 'images.id')
-                    ->select('images.type as img_type', 'images.name as img_name', 'images.path as img_path', 'users.name', 'users.image', 'users.type', 'order.id as order_id', 'order.description', 'order.user_id as user_id', 'order.status as ord_status')
+            $order = Order::where('user_id', $request->user_id)
+                    ->with('avatar')
+                    ->with('orderdetail')
                     ->get();
             if (count($order) > 0) {
                 $order = array(
-                    'id' => (string) $order[0]->order_id,
+                    'id' => (string) $order[0]->id,
                     'user_id' => (string) $order[0]->user_id,
-                    'makername' => $order[0]->name,
-                    'image' => $order[0]->img_path,
+                    'makername' => $order[0]->orderdetail->name,
+                    //'image' => $order[0]->img_path,
                     'description' => $order[0]->description,
-                    'status' => $order[0]->ord_status
+                    'status' => $order[0]->status
                 );
-                return response()->json(['castkingResponse' => [$order]]);
+                return $this->_res(true, $order);
             } else {
-                return response()->json(['castkingResponse' => [['success' => false]]]);
+                return $this->_res(false, ['message' => 'Order not found.']);
             }
         } else {
             $response = $validator->messages();
-            return response()->json(['castkingResponse' => [['response' => $response->all()]]]);
+            return $this->_res(false, $response->all());
         }
     }
 
@@ -111,7 +97,7 @@ class OrderController extends Controller {
             $ord_status = array(
                 'status' => $order->status
             );
-            return $this->_res(true, [$ord_status]);
+            return $this->_res(true, $ord_status);
         } else {
             return $this->_res(false, ['message' => 'Order not found.']);
         }
