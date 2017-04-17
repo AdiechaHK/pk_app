@@ -25,11 +25,12 @@ class Order extends Model {
         'status' => 'required',
     );
     public static $rules_order_maker = array(
-        'id' => 'required'
+        'user_id' => 'required'
     );
 
     public function avatar() {
         return $this->belongsToMany(Image::class, 'order_detail', 'portfollio_id', 'id');
+//        return $this->belongsTo(OrderDetail::class, 'order_id', 'id');
     }
 
     public function orderdetail() {

@@ -21,6 +21,9 @@ Route::post('/signup', 'Api\\UserController@create');
 Route::post('/login', 'Api\\UserController@login');
 Route::post('/getallportfolyo', 'Api\\UserController@getAllPortfolyo');
 Route::post('/getimgportfolyo', 'Api\\UserController@getImgPortfolyo');
+Route::post('/sendrequeststatus', 'Api\\UserController@sendRequestStatus');
+Route::post('/getallconversion', 'Api\\UserController@getAllConversion');
+Route::post('/getconversionproduct', 'Api\\UserController@getConversionProduct');
 
 Route::resource('/contact', 'Api\\ContactController');
 Route::post('/index', 'Api\\ContactController@index');

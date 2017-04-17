@@ -41,32 +41,35 @@ class OrderController extends Controller {
     }
 
     public function getAllOrder(Request $request) {
-        $ordersData = array();
-        $orders = Order::where('user_id', $request->user_id)
-                ->with('avatar')
-                ->with('orderdetail')
-                ->get();
-        if (count($orders) > 0) {
-            foreach ($orders as $order) {
-                $ordersData[] = array(
-                    'id' => (string) $order->id,
-                    'user_id' => (string) $order->user_id,
-                    'makername' => $order->orderdetail->name,
-                    //'image' => $order->avatar->path,
-                    'description' => $order->description,
-                    'status' => $order->status
-                );
+        if (isset($request->user_id)) {
+            $ordersData = array();
+            $orders = Order::where('user_id', $request->user_id)
+                    ->with('avatar')
+                    ->with('orderdetail')
+                    ->get();
+            if (count($orders) > 0) {
+                foreach ($orders as $order) {
+                    $ordersData[] = array(
+                        'id' => (string) $order->id,
+                        'user_id' => (string) $order->user_id,
+                        'makername' => $order->orderdetail->name,
+//                        'image' => $order->avatar->path,
+                        'description' => $order->description,
+                        'status' => $order->status
+                    );
+                }
+                return $this->_res(true, $ordersData);
+            } else {
+                return $this->_res(false);
             }
-            return $this->_res(true, $ordersData);
         } else {
-            return $this->_res(false);
+            return $this->_res(false, ["message" => "User ID is required."]);
         }
     }
 
     public function getOrder(Request $request) {
-        $validator = Validator::make(Input::all(), Order::$rules_order_maker);
-        if ($validator->passes()) {
-            $order = Order::where('user_id', $request->user_id)
+        if (isset($request->orderid)) {
+            $order = Order::where('id', $request->orderid)
                     ->with('avatar')
                     ->with('orderdetail')
                     ->get();
@@ -84,8 +87,7 @@ class OrderController extends Controller {
                 return $this->_res(false, ['message' => 'Order not found.']);
             }
         } else {
-            $response = $validator->messages();
-            return $this->_res(false, $response->all());
+            return $this->_res(false, ["message" => "Order ID is required."]);
         }
     }
 
